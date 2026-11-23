@@ -1,0 +1,22 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Local secrets and demo outputs (see assets/plan.md)
+.env
+assets/data/
+assets/humans/*.jsonl
+assets/humans/detections/
+
+# Editor and OS clutter
+.ipynb_checkpoints/
+.DS_Store
+.vscode/
+.idea/

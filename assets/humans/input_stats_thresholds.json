@@ -1,0 +1,22 @@
+{
+  "human_sessions": 10,
+  "range_margin": 0.1,
+  "thresholds": {
+    "median_key_interval_ms": {
+      "low": 145.9,
+      "high": 501.1
+    },
+    "key_interval_variation": {
+      "low": 0.7157541981083824,
+      "high": 1.761521190278108
+    },
+    "correction_rate": {
+      "low": 0.0,
+      "high": 0.2584337349397591
+    },
+    "mouse_moves_per_message": {
+      "low": 2.09,
+      "high": 197.81
+    }
+  }
+}

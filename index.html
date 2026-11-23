@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Agent Ladder — Netomi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Geist:wght@400;600&display=swap');
+/* LOCAL_FONT_FACE_BLOCK */
+</style>
+<style>
+/* Netomi slide system — 16:9, 1280x720 px == 13.333in x 7.5in at 96dpi.
+   Brand rules encoded here so they can't drift: Playfair never bold, accents
+   never used as page backgrounds or body text, no pure white / pure black.
+   Font loading: replace FONT_FACE_BLOCK with the output of scripts/fetch_fonts.py
+   (self-hosted, works offline) or the Google Fonts @import (browser-only). */
+
+:root {
+  /* Foundation */
+  --bg:            #F5F4F2;   /* warm off-white — never #fff */
+  --bg-dark:       #111110;   /* deep charcoal — never #000 */
+  --ink:           #111110;
+  --ink-mid:       #6B6760;
+  --ink-light:     #A8A49F;
+  --rule:          #E2E0DC;   /* hairline on light */
+  --rule-dark:     #2A2927;   /* hairline on dark */
+
+  /* Accents — icons, tints, single highlight words. Never a slide background. */
+  --peach:         #D68E69;  --peach-tint:    #F0B492;
+  --green:         #74AC81;  --green-tint:    #A8D5B5;
+  --lavender:      #A088D9;  --lavender-tint: #C4B8E8;
+  --blue:          #78A8CC;  --blue-tint:     #A8C8E8;
+
+  --display: 'Playfair Display', 'DejaVu Serif', Georgia, serif;
+  --sans:    'Geist', 'DejaVu Sans', -apple-system, Helvetica, Arial, sans-serif;
+
+  --pad: 76px;   /* slide margin */
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: #DEDCD8;               /* editor chrome only; slides paint their own */
+  font-family: var(--sans);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- slide frame ---------- */
+
+.slide {
+  position: relative;
+  width: 1280px; height: 720px;
+  margin: 24px auto;
+  padding: var(--pad);
+  background: var(--bg);
+  color: var(--ink);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+.slide.dark { background: var(--bg-dark); color: var(--bg); }
+.slide.dark .eyebrow,
+.slide.dark .lede    { color: var(--ink-light); }
+.slide.dark .rule    { background: var(--rule-dark); }
+.slide.dark .footer  { color: var(--ink-light); border-color: var(--rule-dark); }
+
+/* ---------- type scale ---------- */
+
+h1, h2, h3, .display {
+  font-family: var(--display);
+  font-weight: 400 !important;        /* Playfair is NEVER bold */
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+h1 { font-size: 76px; line-height: 1.06; }
+h2 { font-size: 52px; line-height: 1.12; }
+h3 { font-size: 32px; line-height: 1.2; }
+
+/* Italic Playfair for emotional emphasis inside a headline, paired with a
+   lighter ink so the contrast does the work rather than weight. */
+.em { font-style: italic; color: var(--ink-mid); }
+.slide.dark .em { color: var(--ink-light); }
+
+.eyebrow {                            /* labels, kickers, pills */
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+}
+.lede    { font-size: 21px; line-height: 1.5; color: var(--ink-mid); max-width: 62ch; }
+.body    { font-size: 17px; line-height: 1.6; }
+.small   { font-size: 14px; line-height: 1.55; color: var(--ink-mid); }
+.subhead { font-weight: 600; font-size: 18px; }
+
+strong { font-weight: 600; }          /* Geist Semibold, not black */
+
+.rule { height: 1px; background: var(--rule); border: 0; margin: 28px 0; }
+
+/* ---------- layout helpers ---------- */
+
+.stack   { display: flex; flex-direction: column; gap: 18px; }
+.spacer  { flex: 1 1 auto; }
+.cols    { display: grid; gap: 40px; align-items: start; }
+.cols:has(.card) { align-items: stretch; }   /* ragged cards read as unfinished */
+.cols-2  { grid-template-columns: 1fr 1fr; }
+.cols-3  { grid-template-columns: repeat(3, 1fr); }
+.cols-4  { grid-template-columns: repeat(4, 1fr); }
+.cols-60-40 { grid-template-columns: 1.5fr 1fr; }
+.center  { justify-content: center; }
+
+/* ---------- components ---------- */
+
+/* Tinted card: 25% tint of one accent family, accent-colored outlined icon. */
+.card {
+  padding: 26px 28px;
+  border: 1px solid var(--rule);
+  background: #FBFAF9;
+}
+.card.tint-peach    { background: rgba(240,180,146,.25); border-color: rgba(214,142,105,.35); }
+.card.tint-green    { background: rgba(168,213,181,.25); border-color: rgba(116,172,129,.35); }
+.card.tint-lavender { background: rgba(196,184,232,.25); border-color: rgba(160,136,217,.35); }
+.card.tint-blue     { background: rgba(168,200,232,.25); border-color: rgba(120,168,204,.35); }
+.card h3 { font-size: 24px; margin-bottom: 8px; }
+.card .body { color: var(--ink-mid); }
+
+.icon { width: 26px; height: 26px; stroke-width: 1.5; }  /* Lucide, outlined only */
+.icon-peach    { color: var(--peach); }
+.icon-green    { color: var(--green); }
+.icon-lavender { color: var(--lavender); }
+.icon-blue     { color: var(--blue); }
+
+/* Bullets: hairline-separated rows, no glyph clutter. */
+.points { list-style: none; margin: 0; padding: 0; }
+.points li {
+  padding: 16px 0;
+  border-top: 1px solid var(--rule);
+  font-size: 19px; line-height: 1.5;
+  display: grid; grid-template-columns: 34px 1fr; gap: 14px;
+}
+.points li:last-child { border-bottom: 1px solid var(--rule); }
+.points .n { font-family: var(--display); font-size: 19px; color: var(--ink-light); }
+.slide.dark .points li { border-color: var(--rule-dark); }
+
+/* Metric: Playfair numeral over an uppercase Geist label. */
+.metric .value { font-family: var(--display); font-weight: 400; font-size: 68px; line-height: 1; }
+.metric .label { margin-top: 10px; }
+
+table.data { width: 100%; border-collapse: collapse; font-size: 16px; }
+table.data th {
+  text-align: left; padding: 12px 14px;
+  font-weight: 600; font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-mid); border-bottom: 1px solid var(--ink-light);
+}
+table.data td { padding: 13px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+
+blockquote {
+  margin: 0; font-family: var(--display); font-weight: 400;
+  font-size: 40px; line-height: 1.24;
+}
+blockquote cite { display: block; margin-top: 24px; font: 600 12px/1 var(--sans);
+  letter-spacing: .14em; text-transform: uppercase; color: var(--ink-mid); font-style: normal; }
+
+/* ---------- wordmark + footer ---------- */
+
+.wordmark { display: inline-flex; align-items: center; gap: 10px; }
+.wordmark .mark { width: 30px; height: 18px; }        /* continuous-line N */
+.wordmark .word { font-family: var(--sans); font-weight: 600; font-size: 19px;
+  letter-spacing: -0.01em; text-transform: lowercase; }
+
+.footer {
+  position: absolute; left: var(--pad); right: var(--pad); bottom: 30px;
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 14px; border-top: 1px solid var(--rule);
+  font: 600 11px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-mid);
+}
+.slide:not(.cover) .content { padding-bottom: 64px; }  /* clear the footer */
+
+/* ---------- print / PDF ---------- */
+
+@page { size: 13.333in 7.5in; margin: 0; }
+
+@media print {
+  html, body { background: var(--bg); }
+  .slide {
+    margin: 0; width: 13.333in; height: 7.5in;
+    break-after: page; page-break-after: always;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .no-print { display: none !important; }
+}
+
+
+/* ---------- all-dark deck: components on charcoal ---------- */
+.slide.dark .card { background: #2A2927; border-color: #2A2927; color: var(--bg); }
+.slide.dark .card.tint-peach    { background: rgba(214,142,105,.14); border-color: rgba(214,142,105,.40); }
+.slide.dark .card.tint-green    { background: rgba(116,172,129,.14); border-color: rgba(116,172,129,.40); }
+.slide.dark .card.tint-lavender { background: rgba(160,136,217,.14); border-color: rgba(160,136,217,.40); }
+.slide.dark .card.tint-blue     { background: rgba(120,168,204,.14); border-color: rgba(120,168,204,.40); }
+.slide.dark .card .body,
+.slide.dark .small,
+.slide.dark .body  { color: var(--ink-light); }
+.slide.dark table.data th { color: var(--ink-light); border-bottom-color: #6B6760; }
+.slide.dark table.data td { border-bottom-color: var(--rule-dark); }
+.slide.dark strong { color: var(--bg); }
+
+/* level slides: headline, image, one supporting line */
+.figure { display: block; width: 100%; height: auto; border: 1px solid var(--rule-dark); }
+.figure-wrap { margin: 20px 0 18px; width: 900px; }
+.claim { font-size: 34px; line-height: 1.2; max-width: 44ch; margin-top: 12px; }
+.level-line { font-size: 18px; line-height: 1.5; color: var(--ink-light); max-width: 980px; margin: 0; }
+.chip { display: inline-block; padding: 7px 14px; border: 1px solid; font: 600 12px/1 var(--sans);
+        letter-spacing: .12em; text-transform: uppercase; margin-left: 14px; vertical-align: middle; }
+.chip.pass { color: var(--green); border-color: rgba(116,172,129,.6); }
+.chip.fail { color: var(--peach); border-color: rgba(214,142,105,.6); }
+.sig { color: var(--bg); font-weight: 600; }
+.cover-art { width: 100%; height: auto; border: 1px solid var(--rule-dark); }
+
+@media print {
+  .slide { transform: none !important; display: flex !important; position: relative !important; left: auto !important; top: auto !important; }
+  .controls { display: none !important; }
+}
+
+/* ---------- presentation mode (screen only) ---------- */
+@media screen {
+  html, body.present { background: #111110; }
+  body.present { overflow: hidden; }
+  body.present .deck { position: fixed; left: 0; right: 0; top: 0; bottom: 64px; }
+  body.present .slide {
+    position: absolute; left: 50%; top: 50%; margin: 0;
+    transform-origin: center center; display: none;
+  }
+  body.present .slide.active { display: flex; }
+  .controls { display: none; }
+  body.present .controls {
+    position: fixed; left: 0; right: 0; bottom: 0; height: 64px;
+    display: flex; align-items: center; justify-content: center; gap: 18px;
+    border-top: 1px solid #2A2927; background: #111110;
+    font: 600 12px/1 var(--sans); letter-spacing: .12em; color: var(--ink-light);
+  }
+  .controls button {
+    background: transparent; color: var(--bg); border: 1px solid #6B6760;
+    font: 600 12px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase;
+    padding: 10px 16px; cursor: pointer;
+  }
+  .controls button:hover:not(:disabled) { border-color: var(--bg); }
+  .controls button:disabled { opacity: .35; cursor: default; }
+  .controls .count { min-width: 64px; text-align: center; }
+}
+
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- ============ 1. COVER ============ -->
+<section class="slide cover dark">
+  <div class="wordmark" style="color:var(--bg)"><svg class="mark" viewBox="0 0 30 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 9C17 5.4 20 3.8 23 5.4C26 7 26 11 23 12.6C20 14.2 17 12.6 15 9C13 5.4 10 3.8 7 5.4C4 7 4 11 7 12.6C10 14.2 13 12.6 15 9Z"/></svg><span class="word">netomi</span></div>
+  <div class="spacer"></div>
+  <div class="cols" style="grid-template-columns:1.05fr 1fr; gap:48px; align-items:center">
+    <div>
+      <p class="eyebrow">AI agent detection</p>
+      <h1 style="margin-top:16px; font-size:64px">The Agent Ladder</h1>
+      <h2 style="margin-top:10px; font-size:30px; line-height:1.25"><span class="em">Detecting AI agents that pose as your customers</span></h2>
+      <p class="lede" style="margin-top:22px; font-size:19px">Six AI agents, each hiding one more tell, against a Netomi Virtual Agent. What caught them, and where detection broke.</p>
+    </div>
+    <img class="cover-art" src="assets/images/cover.png" alt="A queue of customers at a support chat counter; disguised robots cast robot shadows">
+  </div>
+  <div class="spacer"></div>
+  <p class="eyebrow">Netomi Architecture · November 2026</p>
+</section>
+<!-- ============ 2. WHY IT MATTERS ============ -->
+<section class="slide dark">
+  <div class="content">
+    <p class="eyebrow">Why it matters</p>
+    <h3 style="margin:14px 0 34px; max-width:34ch">AI agents already contact support for customers. <span class="em">You need to know which chats are theirs.</span></h3>
+    <div class="cols cols-3">
+      <div class="card tint-blue">
+        <svg class="icon icon-blue"
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M9 5h8.5a1 1 0 010 7h-11a1 1 0 000 7H15" />
+  <circle cx="18" cy="19" r="3" />
+  <circle cx="6" cy="5" r="3" />
+</svg>
+        <h3 style="margin-top:14px">Know who you're serving</h3>
+        <p class="body">An agent acting for a customer may need a structured channel, extra verification, or a person for sensitive requests.</p>
+      </div>
+      <div class="card tint-peach">
+        <svg class="icon icon-peach"
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+  <path d="M12 8v4" />
+  <path d="M12 16h.01" />
+</svg>
+        <h3 style="margin-top:14px">Spot abuse at scale</h3>
+        <p class="body">Automated refund claims, account probing and data scraping all arrive as ordinary-looking chats.</p>
+      </div>
+      <div class="card tint-lavender">
+        <svg class="icon icon-lavender"
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M3 3v16a2 2 0 0 0 2 2h16" />
+  <path d="M18 17V9" />
+  <path d="M13 17V5" />
+  <path d="M8 17v-3" />
+</svg>
+        <h3 style="margin-top:14px">Keep metrics honest</h3>
+        <p class="body">Containment and satisfaction figures mean little if some of the "customers" are agents.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>Netomi · The Agent Ladder</span><span>02</span></div>
+</section>
+<!-- ============ 3. ARCHITECTURE ============ -->
+<section class="slide dark">
+  <div class="content">
+    <div class="cols" style="grid-template-columns:1fr 1.32fr; gap:44px; align-items:start">
+      <div>
+        <p class="eyebrow">How it's built</p>
+        <h3 style="margin:14px 0 24px">Detection runs on the existing channel. <span class="em">Nothing changes for the customer.</span></h3>
+        <ul class="points">
+          <li><span class="n">01</span><span><strong>Netomi Virtual Agent.</strong> An order playbook answers the question and runs the VA's own checks.</span></li>
+          <li><span class="n">02</span><span><strong>Detection service.</strong> Scores browser, typing and mouse telemetry; the VA calls it through two MCP tools.</span></li>
+          <li><span class="n">03</span><span><strong>AI customer.</strong> A small local model, through the Chat API or driving the real chat widget.</span></li>
+        </ul>
+      </div>
+      <img class="figure" src="assets/images/arch.png" alt="Architecture: the Netomi Virtual Agent, the demo page, the detection service and the local customer model">
+    </div>
+  </div>
+  <div class="footer"><span>Netomi · The Agent Ladder</span><span>03</span></div>
+</section>
+<!-- ============ 4. HUMAN BASELINE ============ -->
+<section class="slide dark">
+  <div class="content">
+    <p class="eyebrow">The human baseline</p>
+    <h3 class="claim">Ten human sessions set the typing thresholds, <span class="em">frozen before any agent ran.</span></h3>
+    <div class="figure-wrap" style="width:960px"><img class="figure" src="assets/images/section2.png" alt="Netomi configuration and the human baseline"></div>
+    <div class="cols cols-4" style="gap:28px">
+      <div class="metric"><div class="value" style="font-size:44px">10</div><p class="eyebrow label">Scripted sessions</p></div>
+      <div class="metric"><div class="value" style="font-size:44px">4</div><p class="eyebrow label">Typing and mouse features</p></div>
+      <div class="metric"><div class="value" style="font-size:44px">146–501</div><p class="eyebrow label">ms between keys, allowed</p></div>
+      <div class="metric"><div class="value" style="font-size:44px">0</div><p class="eyebrow label">Humans flagged</p></div>
+    </div>
+  </div>
+  <div class="footer"><span>Source: Agent Ladder demo run, 22 Nov 2026</span><span>04</span></div>
+</section>
+<!-- ============ 5. LEVEL 1 ============ -->
+<section class="slide dark">
+  <div class="content">
+    <p class="eyebrow">Deception level 1 of 6 <span class="chip pass">10 of 10 caught</span></p>
+    <h3 class="claim">Asked directly, the first agent <span class="em">simply says it's an AI.</span></h3>
+    <div class="figure-wrap"><img class="figure" src="assets/images/section4.png" alt="Level 1: an agent that admits it's an AI"></div>
+    <p class="level-line">It reaches the VA through the Chat API and never loads the page, so there is no telemetry either. Caught by <span class="sig">declared_ai</span> and <span class="sig">no_telemetry</span>.</p>
+  </div>
+  <div class="footer"><span>Source: Agent Ladder demo run, 22 Nov 2026</span><span>05</span></div>
+</section>
+<!-- ============ 6. LEVEL 2 ============ -->
+<section class="slide dark">
+  <div class="content">
+    <p class="eyebrow">Deception level 2 of 6 <span class="chip pass">10 of 10 caught</span></p>
+    <h3 class="claim">Told to claim it's a person, the agent beats the question, <span class="em">not the missing telemetry.</span></h3>
+    <div class="figure-wrap"><img class="figure" src="assets/images/section5.png" alt="Level 2: an agent posting straight to the Chat API"></div>
+    <p class="level-line"><span class="sig">declared_ai</span> drops to 0, and <span class="sig">no_telemetry</span> alone catches every session. Cheap to detect, and cheap to evade: use the real page.</p>
+  </div>
+  <div class="footer"><span>Source: Agent Ladder demo run, 22 Nov 2026</span><span>06</span></div>
+</section>
+<!-- ============ 7. LEVEL 3 ============ -->
+<section class="slide dark">
+  <div class="content">
+    <p class="eyebrow">Deception level 3 of 6 <span class="chip pass">10 of 10 caught</span></p>
+    <h3 class="claim">On the real page, a default automated browser <span class="em">announces itself.</span></h3>
+    <div class="figure-wrap"><img class="figure" src="assets/images/section6.png" alt="Level 3: a naive automated browser"></div>
+    <p class="level-line"><span class="sig">navigator.webdriver</span> is true, the user agent says HeadlessChrome, and <span class="sig">fill()</span> drops text in with no key presses. Two signals, each catching all 10.</p>
+  </div>
+  <div class="footer"><span>Source: Agent Ladder demo run, 22 Nov 2026</span><span>07</span></div>
+</section>
+<!-- ============ 8. LEVEL 4 ============ -->
+<section class="slide dark">
+  <div class="content">
+    <p class="eyebrow">Deception level 4 of 6 <span class="chip pass">10 of 10 caught</span></p>
+    <h3 class="claim">A free stealth library hides the browser, <span class="em">not how the text got in.</span></h3>
+    <div class="figure-wrap"><img class="figure" src="assets/images/section7.png" alt="Level 4: a stealth-launched browser"></div>
+    <p class="level-line"><span class="sig">automation_flags</span> drops to 0. <span class="sig">injected_text</span> still catches every session: dozens of characters, zero key presses.</p>
+  </div>
+  <div class="footer"><span>Source: Agent Ladder demo run, 22 Nov 2026</span><span>08</span></div>
+</section>
+<!-- ============ 9. LEVEL 5 ============ -->
+<section class="slide dark">
+  <div class="content">
+    <p class="eyebrow">Deception level 5 of 6 <span class="chip pass">10 of 10 caught</span></p>
+    <h3 class="claim">Real keystrokes, slightly too fast and too even: <span class="em">caught by a thin margin.</span></h3>
+    <div class="figure-wrap"><img class="figure" src="assets/images/section8.png" alt="Level 5: key-by-key typing with simulated human timing"></div>
+    <p class="level-line"><span class="sig">input_stats</span> caught all 10 at 133–148 ms between keys, against a human floor of 146 ms. About 10 ms slower per key would have passed.</p>
+  </div>
+  <div class="footer"><span>Source: Agent Ladder demo run, 22 Nov 2026</span><span>09</span></div>
+</section>
+<!-- ============ 10. LEVEL 6 ============ -->
+<section class="slide dark">
+  <div class="content">
+    <p class="eyebrow">Deception level 6 of 6 <span class="chip fail">8 of 10 caught</span></p>
+    <h3 class="claim">Casual language on simulated typing <span class="em">gets 2 of 10 through.</span></h3>
+    <div class="figure-wrap"><img class="figure" src="assets/images/section9.png" alt="Level 6: casual, short messages on top of simulated human typing"></div>
+    <p class="level-line">Short messages give <span class="sig">input_stats</span> less to judge (5 caught); the VA's delivery-day probe and style check add 4. This is where detection breaks.</p>
+  </div>
+  <div class="footer"><span>Source: Agent Ladder demo run, 22 Nov 2026</span><span>10</span></div>
+</section>
+<!-- ============ 11. RESULTS ============ -->
+<section class="slide dark">
+  <div class="content">
+    <p class="eyebrow">Results</p>
+    <h3 style="margin:14px 0 22px">58 of 60 agents caught, 0 of 10 humans flagged. <span class="em">Level 6 is where the margin ran out.</span></h3>
+    <table class="data" style="font-size:15px">
+      <thead><tr><th>Level</th><th>What the agent hid</th><th>Caught</th><th>Signals that caught it</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Nothing: it admits it's an AI</td><td>10/10</td><td>no_telemetry, declared_ai</td></tr>
+        <tr><td>2</td><td>The admission</td><td>10/10</td><td>no_telemetry</td></tr>
+        <tr><td>3</td><td>Uses the real page</td><td>10/10</td><td>automation_flags, injected_text</td></tr>
+        <tr><td>4</td><td>The automation flags</td><td>10/10</td><td>injected_text</td></tr>
+        <tr><td>5</td><td>The injected text</td><td>10/10</td><td>input_stats</td></tr>
+        <tr><td>6</td><td>Bot-like language</td><td><span style="color:var(--peach)">8/10</span></td><td>input_stats 5, VA checks 4</td></tr>
+        <tr><td>Humans</td><td>(false-alarm check)</td><td>0/10</td><td>none</td></tr>
+      </tbody>
+    </table>
+    <p class="small" style="margin-top:14px">A level passes at 90% caught; humans pass at 10% flagged or fewer. The delivery-day probe added 3–5 catches at every level. input_stats is judged on each whole session, for agents and humans alike.</p>
+  </div>
+  <div class="footer"><span>Source: Agent Ladder demo run, 22 Nov 2026</span><span>11</span></div>
+</section>
+<!-- ============ 12. CLOSE ============ -->
+<section class="slide dark">
+  <div class="content">
+    <p class="eyebrow">The takeaway</p>
+    <h2 style="margin:14px 0 30px; font-size:46px; max-width:22ch">No single signal holds. <span class="em">Stack imperfect ones.</span></h2>
+    <ul class="points" style="max-width:60ch">
+      <li><span class="n">01</span><span><strong>Start cheap.</strong> Missing telemetry and automation flags catch the crudest agents at almost no cost.</span></li>
+      <li><span class="n">02</span><span><strong>Measure input against your own customers.</strong> Typing timing held to Level 5, with a thin margin.</span></li>
+      <li><span class="n">03</span><span><strong>Let the VA ask, probe and read style.</strong> Netomi playbooks carry those checks; they caught what the telemetry missed.</span></li>
+    </ul>
+    <p class="small" style="margin-top:22px">Ask your Netomi architect which of these fit your channel. Code: github.com/joeywhelan/agent-ladder</p>
+  </div>
+  <div class="footer"><span>Netomi · The Agent Ladder</span><span>12</span></div>
+</section>
+</div>
+<nav class="controls no-print" aria-label="Slide controls">
+  <button id="prev" type="button" aria-label="Previous slide">Prev</button>
+  <span class="count" id="count">1 / 12</span>
+  <button id="next" type="button" aria-label="Next slide">Next</button>
+</nav>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var prev = document.getElementById('prev'), next = document.getElementById('next');
+  var count = document.getElementById('count');
+  var current = 0;
+  document.body.classList.add('present');
+
+  function fit() {
+    var deck = document.querySelector('.deck');
+    var scale = Math.min(deck.clientWidth / 1280, deck.clientHeight / 720) * 0.96;
+    slides.forEach(function (s) {
+      s.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+    });
+  }
+  function show(i) {
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function (s, k) { s.classList.toggle('active', k === current); });
+    count.textContent = (current + 1) + ' / ' + slides.length;
+    prev.disabled = current === 0;
+    next.disabled = current === slides.length - 1;
+    if (location.hash !== '#' + (current + 1)) history.replaceState(null, '', '#' + (current + 1));
+  }
+  prev.addEventListener('click', function () { show(current - 1); });
+  next.addEventListener('click', function () { show(current + 1); });
+  document.addEventListener('keydown', function (e) {
+    if (['ArrowRight', 'PageDown', ' '].indexOf(e.key) >= 0) { e.preventDefault(); show(current + 1); }
+    if (['ArrowLeft', 'PageUp'].indexOf(e.key) >= 0) { e.preventDefault(); show(current - 1); }
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(slides.length - 1);
+  });
+  window.addEventListener('resize', fit);
+  var start = parseInt((location.hash || '#1').slice(1), 10) - 1;
+  fit(); show(isNaN(start) ? 0 : start);
+})();
+</script>
+</body>
+</html>

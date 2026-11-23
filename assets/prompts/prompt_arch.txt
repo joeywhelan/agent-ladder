@@ -1,0 +1,80 @@
+# Summary
+
+The request presents a detailed specification for creating an architecture diagram for a demo that measures how well a Netomi virtual agent, helped by an external detection service, can tell an AI agent from a person in a customer-service chat. Everything except the virtual agent runs on one laptop. A Jupyter notebook drives a harness whose simulated customer is a small local model on Ollama. The harness reaches the agent in one of two ways: straight through the Netomi Chat API with no web page (Levels 1–2), or by driving a real browser with Playwright to a demo page that carries the Netomi chat widget and a telemetry collector (Levels 3–6). Recorded human testers use the same page. The collector posts keystroke timing, mouse movement and browser flags to the detection service, and the virtual agent calls the detection service's two MCP tools on every turn through a single ngrok tunnel.
+
+**Primary Focus:** Visualize two places, the Netomi cloud and the laptop, and the paths between them: the two ways a customer reaches the agent (Chat API, or the widget on the demo page), the page's telemetry going to the detection service, and the agent's tool calls coming back out through the tunnel to that same service. The reader should see at a glance that the detection service sits where two streams meet: what the page saw (telemetry) and what the agent asks (tool calls), and that the Chat API path skips the page and its telemetry entirely. The reader should also see that the AI customer is a model running locally on the laptop, inside the laptop boundary and labeled as local, not a cloud service.
+
+**Layout — two regions and one gap:**
+- Left, taking about 27% of the width: one large dashed boundary box, `Netomi Agentic Studio`, its name at the top-left inside the box
+- Right, taking about 62% of the width: one large dashed boundary box, `laptop`, its name at the top-left inside the box
+- Between them, a clear empty gap of about 11% of the width. It holds three crossings at different heights:
+  - Upper: the Chat API arrow between the laptop's `harness` and Netomi's `virtual agent`
+  - Middle: the widget arrow between the laptop's `demo page` and Netomi's `virtual agent`
+  - Lower: the `ngrok` tunnel node, sitting on neither side
+- The gap must be wide enough to hold its labels without touching either dashed boundary
+
+**Nodes:**
+- Netomi boundary, three rows:
+  - Top two rows: `virtual agent` / `order playbook + knowledge`, violet, the largest Netomi node, tall enough to span the upper and middle crossings so both chat arrows land on its right edge. To its lower left, a small muted grey node `knowledge.pdf`
+  - Bottom row, level with the tunnel: a node drawn as a stack of three rows, titled `MCP tools`, with the rows `check_session` / `report_signal`, violet, placed at the right side of the boundary, closest to the tunnel. Make it wide enough that each name fits on one line at the minimum arrow-label size; never wrap, hyphenate or shrink a name
+- Gap: `ngrok`, coral, drawn as a short horizontal pipe or tube rather than a box. No domain name or URL appears under or beside the pipe
+- Laptop boundary, laid out as a grid of three columns (left, middle, right) and four rows:
+  - Left column, row 1, level with the upper crossing: `harness` / `runs.py · customer.py`, amber
+  - Left column, row 2, level with the middle crossing: `demo page` / `chat widget + collector.js · :8001`, amber, directly below `harness` and aligned with it
+  - Left and middle columns, row 3, level with the tunnel: `detection service` / `service.py :8000 · checks.py`, cyan, the largest node in the laptop boundary, spanning the left and middle columns
+  - Left column, row 4: one muted grey node `records` / `events · signals · verdicts · runs`, below the left half of `detection service`
+  - Middle column, row 1: `customer model` / `qwen3.5:4b · local on Ollama`, green, level with `harness`, the same size as `harness`. It sits well inside the laptop boundary, with clear space between it and the dashed line, so it reads as running on the laptop
+  - Middle column, row 2: `human tester` / `Chrome · ?label=human`, amber, smaller, level with `demo page`
+  - Right column, row 3: `demo.ipynb` / `Jupyter Notebook`, amber, level with `detection service`
+  - The right column is otherwise empty
+
+**Connection Labels** (each arrow in its source's colour unless stated):
+- `harness` ↔ `virtual agent`: "Chat API · Levels 1–2" (amber, double-headed, crossing the gap leftward at the upper level; it carries both the customer's messages and the agent's replies). Place the label in the gap, above the arrow
+- `demo page` ↔ `virtual agent`: "chat widget + session ID" (amber, double-headed, crossing the gap leftward at the middle level). Place the label in the gap, above the arrow
+- `harness` → `demo page`: "Playwright · Levels 3–6" (amber, short, straight down)
+- `harness` → `customer model`: "writes the next message" (amber, short, rightward)
+- `human tester` → `demo page`: "types" (amber, short, leftward)
+- `demo page` → `detection service`: "telemetry: keys · mouse · flags" (amber, **thick**, straight down). Place the label beside the arrow, inside the laptop boundary
+- `knowledge.pdf` → `virtual agent`: "knowledge source" (thin grey, short, upward)
+- `virtual agent` → `MCP tools`: "every turn" (violet, short, downward)
+- `MCP tools` → `ngrok`: "HTTPS + Bearer token" (coral, **thick**, the only call Netomi makes out to the laptop). Place this label in the gap, centred above the `ngrok` pipe, on one or two lines ("HTTPS +" over "Bearer token"), with clear space between it and both dashed boundaries. No dashed line may run through any label
+- `ngrok` → `detection service`: "tunnel to /mcp" (coral, thick). Place this label inside the laptop boundary, above the arrow, clear of the laptop's dashed line
+- `detection service` → `records`: "appends" (thin grey, short, downward)
+- `demo.ipynb` → `harness`: "run_level" (amber, thin). It leaves the top of `demo.ipynb`, runs up the right column to just above row 1, turns left along the top of the laptop boundary above `customer model`, and drops into the top of `harness`, crossing no other node
+- `records` → `demo.ipynb`: "results grid" (thin grey). It leaves the right side of `records` and runs right, below `detection service`, into the bottom of `demo.ipynb`
+
+**Arrow check** — exactly these arrows touch each node, and no others:
+- `virtual agent`: "Chat API · Levels 1–2" (to and from `harness`), "chat widget + session ID" (to and from `demo page`), "knowledge source" (from `knowledge.pdf`) and "every turn" (to `MCP tools`)
+- `MCP tools`: "every turn" (in) and "HTTPS + Bearer token" (out, to `ngrok`)
+- `ngrok`: "HTTPS + Bearer token" (in) and "tunnel to /mcp" (out)
+- `harness`: "Chat API · Levels 1–2", "Playwright · Levels 3–6" (out), "writes the next message" (out) and "run_level" (in)
+- `demo page`: "chat widget + session ID", "Playwright · Levels 3–6" (in), "types" (in) and "telemetry: keys · mouse · flags" (out)
+- `detection service`: "telemetry: keys · mouse · flags" (in), "tunnel to /mcp" (in) and "appends" (out)
+- `records`: "appends" (in) and "results grid" (out)
+- `demo.ipynb`: "run_level" (out) and "results grid" (in)
+- `customer model`, `human tester` and `knowledge.pdf`: only their one arrow each
+- No arrow connects `harness` directly to `detection service`, and no arrow connects `virtual agent` directly to anything in the laptop except the two chat arrows
+
+**Canvas and Sizing — the image is embedded in a GitHub README:** 1600 × 1000 px (16:10), delivered as a PNG file (not JPEG or WEBP), opaque, saved to `assets/images/arch.png`, under 1 MB. GitHub does not crop README images; it scales them to the width of the content column while preserving the aspect ratio. That column measures about 830 px on a desktop repository page and shrinks on smaller screens, so this canvas is a 2× asset that will display at roughly 830 × 520 px. Design for that display size: every label must stay legible at half scale, so the smallest text in the frame is no smaller than 24 px on the 1600-px canvas, node titles are at least 36 px, and arrow labels are at least 28 px. Prefer fewer, larger labels over dense small ones. Keep at least 3% clear margin on every edge. The background must be opaque: GitHub renders the README on a white page in light mode and a near-black page in dark mode, and an opaque dark canvas reads the same on both.
+
+**Visual Approach:** Dark, flat, modern diagram. Background near-black graphite (#101217). Both boundaries are dashed light-slate outlines with a fill very slightly lighter than the background. Colours:
+- Amber (#F5A524): the customer side, whoever is typing and everything that delivers it: `harness`, `demo page`, `human tester`, `demo.ipynb`, and their arrows
+- Violet (#9B7BFF): everything Netomi runs: `virtual agent`, `MCP tools`
+- Cyan (#3DD6D0): the `detection service`
+- Coral (#FF6B5A): only the `ngrok` tunnel and the two arrows through it
+- Green (#5BD67A): the local AI customer, `customer model`, the only green node, so the model that plays the customer stands out as one thing on the laptop
+- Muted grey (#6B7280): the files, `knowledge.pdf` and `records`, and their thin arrows
+
+The gap is left genuinely empty except for the three crossings described above. The two chat paths read as two separate amber lines across the upper half, the agent's tool path (violet `MCP tools` → coral tunnel → cyan `detection service`) reads as one straight horizontal line across the lower half, and the thick amber telemetry arrow drops straight from `demo page` into `detection service`, so the service visibly sits where the telemetry and the tool calls meet. No glow except a subtle soft edge on the `detection service` node. No logos or brand marks anywhere: no Netomi, ngrok, Ollama, Qwen, Playwright, Chrome, Jupyter, Python, FastAPI or GitHub logos, no badges or watermarks. Each component is identified by its text label and its colour only.
+
+**Text Accuracy — spelling is critical and must be verified:**
+Every text string in the diagram must be spelled **exactly** as listed below. Copy these strings character-for-character; do not re-type them from memory, do not pluralise, abbreviate, expand, or "correct" them. Underscores in names are intentional and must not be replaced with spaces or hyphens. The most common failure mode is a **doubled consonant** — "Agenttic", "sesssion", "repport" — so check every label for repeated letters before finalising. Pay particular attention to: **Agentic**, **check_session**, **report_signal**, **run_level**, **runs.py · customer.py**, **service.py :8000 · checks.py**, **collector.js · :8001**, **qwen3.5:4b · local on Ollama** (the version is `3.5` and the size `4b`, lowercase), **?label=human**, and **demo.ipynb**.
+
+Complete list of permitted strings — nothing else appears in the frame:
+- Boundaries: `Netomi Agentic Studio`; `laptop`
+- Node labels: `virtual agent` / `order playbook + knowledge`; `knowledge.pdf`; `MCP tools` / `check_session` / `report_signal`; `ngrok`; `harness` / `runs.py · customer.py`; `demo page` / `chat widget + collector.js · :8001`; `detection service` / `service.py :8000 · checks.py`; `records` / `events · signals · verdicts · runs`; `customer model` / `qwen3.5:4b · local on Ollama`; `human tester` / `Chrome · ?label=human`; `demo.ipynb` / `Jupyter Notebook`
+- Arrow labels: `Chat API · Levels 1–2`; `chat widget + session ID`; `Playwright · Levels 3–6`; `writes the next message`; `types`; `telemetry: keys · mouse · flags`; `knowledge source`; `every turn`; `HTTPS + Bearer token`; `tunnel to /mcp`; `appends`; `run_level`; `results grid`
+
+Before returning the image, proofread every string in the frame against this list letter by letter, and check every arrow against the arrow check above. If any label is misspelled, truncated, or duplicated, regenerate rather than delivering it. Note for whoever runs this prompt: image generators are unreliable with text even when given exact strings. Always proofread the delivered image against this list, and pay closest attention to the largest headings and the file names, where errors are least likely to be noticed and most visible to readers.
+
+**Exclusions:** Do not add any logo, brand mark, icon or watermark. Do not add any legend, legend box, caption box, footnote, key takeaways box, callout box, or any other explanatory text block anywhere in the diagram. No "Note:", no "Key Takeaways:", no colour key, no numbered step badges, no level badges, no sample chat messages, no sample JSON, no transcripts, no results tables. Do not draw a person, a robot, a mask, a chat bubble, a laptop or computer outline, a browser window, a cloud shape (and never place `customer model` in or near anything that looks like a cloud), a database cylinder, a lock or key icon, a keyboard or a mouse. The diagram must contain only the two boundaries with their labels, the nodes, the tunnel, and the connection arrows with their labels. Nothing else. Do not render the diagram inside a browser window, a README page, a terminal window, a device frame, or any other mock-up; deliver the diagram alone, edge to edge on the canvas.

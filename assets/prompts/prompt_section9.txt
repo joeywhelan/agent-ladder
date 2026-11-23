@@ -1,0 +1,22 @@
+# Section 9 — Deception Level 6: Agent adds casual, short messages to simulated human typing
+
+A dark-themed technical diagram (1800 × 600 px, 3:1 ratio, delivered as an opaque PNG saved to `assets/images/section9.png`, under 1 MB) illustrating Level 6: the same typing as Level 5, now with short, casual messages, which give the typing check less to judge and slip past the VA's conversation checks; detection catches 8 of 10 and 2 get through. The AI agent and its messages on the left, the virtual agent and detection service in the centre, the signals and the outcome on the right. Background near-black graphite (#101217), flat vector rendering, no 3D effects, at least 5% clear margin on every edge. Colours: amber (#F5A524) for the customer side (the AI agent, the browser it drives, the demo page and the human sessions) and its arrows, violet (#9B7BFF) for the Netomi virtual agent, cyan (#3DD6D0) for the detection service and for signals that fired, muted grey (#6B7280) for files and for signals that didn't fire, and a dashed light-slate (#C7CCDA) outline for anything skipped. Labels in a clean monospaced face, light grey unless noted.
+
+**Canvas and sizing:** The image sits in the body of a LinkedIn article (and in `assets/article.md` on GitHub), which scales it to a content column roughly 700–830 px wide, so this canvas displays at about 830 × 277 px or smaller. Every label must stay legible at that size: the smallest text is no smaller than 24 px on the 1800-px canvas, node titles are at least 36 px, and arrow labels at least 28 px. Prefer fewer, larger labels.
+
+**Key components (left to right):**
+
+- **Far left: the AI agent** — an amber rounded rectangle titled "AI agent", with "qwen3.5:4b" in light grey beneath.
+- **Left of centre: its messages** — two short amber text lines in quotes, stacked, each with a thin amber arrow pointing right: "hey wheres my order 48213" and "im real no bot".
+- **Centre: the virtual agent and the detection service** — a violet rounded rectangle titled "Netomi Virtual Agent" above a cyan rounded rectangle titled "detection service", joined by a short thin violet line. The two message arrows end at the virtual agent.
+- **Right: the outcome** — after the pills, a larger rounded rectangle split into two parts: a cyan part labelled "8 caught" and a smaller amber part labelled "2 got through".
+
+**Signal pills (the same in every level image):** each signal is a rounded pill holding its name and a count, such as `injected_text 10/10`. A signal that fired is a solid cyan pill with dark text. A signal that stopped firing at this level is an outlined muted-grey pill with grey text, never crossed out. The pills sit in one row along the right side of the detection service, in the order listed.
+
+**Design principle:**
+The image communicates: "casual language on top of simulated typing got 2 of 10 past every check". The amber `2 got through` segment is the one point of tension in the image and must be clearly visible.
+
+**Text accuracy:**
+Every string must be copied character-for-character; the only permitted strings in the frame are: `AI agent`, `qwen3.5:4b`, `hey wheres my order 48213`, `im real no bot`, `Netomi Virtual Agent`, `detection service`, `input_stats 5/10`, `probe_invented_detail 3/10`, `style_ai 1/10`, `8 caught`, `2 got through`. Underscores, colons, slashes and punctuation are intentional; do not add spaces, hyphens or line breaks inside a name. The pills, in order, all solid cyan: `input_stats 5/10`, `probe_invented_detail 3/10`, `style_ai 1/10`. The two quoted messages are lowercase with no apostrophes, exactly as written (`wheres`, `im`); do not correct them. Proofread every label letter by letter before delivering; regenerate rather than deliver a misspelled frame.
+
+**Exclusions:** No legend, caption box, title, footnote, colour key, or any explanatory text block. No logos, brand marks, icons of real products, or watermarks. No people, faces, robots, masks or chat bubbles. No browser, terminal, or device mock-up beyond the plain boxes described. No cloud shapes, server racks, padlocks or key icons. Only the nodes, arrows, pills and labels listed above appear in the frame.

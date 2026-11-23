@@ -1,0 +1,57 @@
+# The Agent Ladder LinkedIn Cover Design Specification
+
+Cover image for the LinkedIn article "The Agent Ladder: Detecting AI Agents in a Netomi Virtual Agent Chat". The title appears only in the article, never in the image.
+
+A clean editorial illustration of a line of customers waiting at a customer-service counter, lit from the side so each one casts a long shadow on the wall behind them. Some of the customers are people. The others are robots in disguise, each disguise better than the last, and every robot's shadow gives it away: no matter how human the robot looks, its shadow on the wall is plainly a robot. The story is the demo's: AI agents pose as customers in a support chat, they get better and better at looking human, and detection works by reading the traces they can't disguise, while the real people pass untouched. It must read in two seconds: people and disguised robots in one queue, and the shadows tell you which is which.
+
+**Canvas:** 1920 × 1080 px, 16:9, the size LinkedIn specifies for an article cover image. LinkedIn crops uploads to 16:9, so matching it exactly means nothing is lost. Deliver the image as a PNG file, not JPEG, WEBP or GIF.
+
+**Framing:** A straight side view of the queue, the figures walking left to right in a single line toward the counter at the right. All figures, all shadows and the counter sit fully inside the frame, with at least 10% clear margin on the left and right edges and 12% on the top and bottom. Nothing touches or crosses a border. LinkedIn shows the cover at 16:9 on the article page but at a shorter 1.91:1 ratio in feed previews, so the figures and their shadows must sit in the central band and the composition must be clearly wider than it is tall. Keep the upper 12% empty wall.
+
+**Style and Render:**
+- Modern editorial illustration: flat, simple shapes with soft gradients and a fine, even paper grain, like a magazine feature illustration. Clean silhouettes, no outlines, a limited palette. Not photoreal, not 3D, not a cartoon with exaggerated faces, not a diorama
+- One low, warm light source from the far left, out of frame, so every figure casts a long, crisp shadow up and to the right on the wall behind the queue. The shadows are sharp-edged and clearly shaped, never blurred into blobs
+- Faces are simple and calm: small dot eyes and a gentle line for a mouth on the people, so the figures read at a glance without detail stealing attention
+
+**The Scene:**
+A plain, pale warm-grey wall fills the background, and a darker floor runs along the bottom. At the right end of the queue stands a simple, modern service counter with a small window, glowing soft violet (#9B7BFF) from inside, like a help desk lit up and ready to answer. Above the window hangs a plain violet sign in the shape of a rounded chat bubble, holding two short raised bars and no text, so the counter clearly reads as customer-support chat.
+
+Seven figures wait in line, evenly spaced, facing the counter, all about the same adult height. The disguises get better toward the back of the line, so the best-disguised robot is last in line. From the front of the line (right, at the counter) to the back (left):
+1. **Robot, crude disguise (at the front, nearest the counter):** a boxy, obviously mechanical robot in matte grey metal wearing a pair of novelty glasses with a fake nose and moustache. Nobody would be fooled.
+2. **Person:** a woman in a casual jacket, holding a phone at her side.
+3. **Robot, better disguise:** a slimmer robot in a long trench coat with the collar up and a brimmed hat pulled low, its metal hands and jaw still showing.
+4. **Person:** a man in a sweater with a backpack over one shoulder.
+5. **Robot, good disguise:** a robot wearing a realistic human mask, a cardigan and trousers, its posture slightly too stiff; only a thin seam at the jaw and its metal wrists hint at what it is.
+6. **Person:** an older woman in a raincoat carrying a small paper bag.
+7. **Robot, near-perfect disguise (last in line, at the far left):** a figure that looks exactly like an ordinary young man in a shirt and jeans. Nothing about him looks mechanical at all.
+
+**The Shadows (the point of the image):**
+Every figure casts its shadow on the wall behind it.
+- The three people cast ordinary human shadows that match their outlines exactly: the jacket, the backpack, the raincoat and bag. Their shadows are plain, soft dark grey.
+- The four robots cast **robot shadows**: whatever they wear, the shadow on the wall is a plain, boxy robot silhouette, with an antenna, a square head and blocky limbs, clearly not the shape of the figure's costume. Each robot shadow is edged with a thin, crisp line of cyan light (#3DD6D0), so the four of them stand out at once.
+- The near-perfect robot, last in line at the far left, casts the clearest robot shadow of all: the best disguise in the line, and it still gives itself away.
+The contrast must be obvious at a glance: the figures get more human from the counter back to the end of the line, right to left, but the robot shadows never change.
+
+**Text:**
+None. **No title, no headline, no labels, no letters, numbers or glyphs of any kind anywhere in the frame.** No words on the counter, the sign, the window, clothing, bags or phones. The chat-bubble sign holds only plain raised bars that must not become readable text or pseudo-text.
+
+**Exclusions:**
+- No more and no fewer than seven figures; no figure behind the counter, no staff, no crowd in the background
+- No screens other than the small, blank phone in the first person's hand; no laptops, monitors, kiosks or app interfaces
+- No magnifying glasses, scanners, cameras, beams, spotlights or lasers pointing at anyone; the shadows alone do the detecting
+- No ladders, steps, nesting dolls, masks on the wall or other props
+- No symbols: no question marks, checkmarks, crosses, arrows, warning signs, icons, stars or emoji
+- No glow around the figures, halos, sparks, lens flare, bloom or light rays; the cyan edges on the robot shadows are thin, crisp lines
+- No logo anywhere in the frame: no Netomi brandmark or wordmark, and no other company mark, badge or watermark
+
+**Palette:**
+- Wall: pale warm grey (#D9D4CC), slightly darker toward the edges; floor: dark graphite (#2A2D33)
+- People: muted, natural clothing colours, ochre, slate blue, olive, soft rust and cream, kept calm and desaturated
+- Robots: matte grey and gunmetal metal, wearing the same muted clothing colours as the people
+- Human shadows: soft dark grey (#8F8A83), matching the figures' outlines
+- Robot shadows: the same dark grey, edged with cyan #3DD6D0
+- Counter window and chat-bubble sign: violet #9B7BFF
+- No bright red, no pink, no saturated blue. Cyan appears only on the robot shadows' edges; violet only on the counter window and its sign
+
+**Mood:**
+Clever, light and instantly readable: an image someone would stop scrolling for and get in one look. It should feel like a smart magazine illustration, not tech marketing. The read is *the disguise gets better, the shadow never lies*: AI agents in line with real customers, looking more human every time, and still caught by what they can't hide.

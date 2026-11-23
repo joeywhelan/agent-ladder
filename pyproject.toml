@@ -1,0 +1,33 @@
+[project]
+name = "agent-ladder"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "joeywhelan", email = "joey.whelan@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.163.1",
+    "httpx>=0.28.1",
+    "mcp>=2.3.0",
+    "ollama>=0.6.3",
+    "playwright>=1.65.2",
+    "playwright-stealth>=2.0.3",
+    "pyngrok>=9.1.4",
+    "python-dotenv>=1.2.4",
+    "pyyaml>=6.0.3",
+    "uvicorn>=0.54.0",
+]
+
+[project.scripts]
+agent-ladder = "agent_ladder:main"
+
+[build-system]
+requires = ["uv_build>=0.12.24,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.4.0",
+]

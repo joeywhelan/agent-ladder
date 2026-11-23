@@ -1,0 +1,22 @@
+# Section 7 — Deception Level 4: Agent uses Playwright stealth mode to hide the automation flags
+
+A dark-themed technical diagram (1800 × 600 px, 3:1 ratio, delivered as an opaque PNG saved to `assets/images/section7.png`, under 1 MB) illustrating Level 4: the same route as Level 3, but a stealth launch makes the browser look ordinary, so the automation flags disappear; only the missing keystrokes still give it away. The AI agent and its browser on the left, the demo page in the centre, the detection service and its signals on the right; the virtual agent sits small above the page. Background near-black graphite (#101217), flat vector rendering, no 3D effects, at least 5% clear margin on every edge. Colours: amber (#F5A524) for the customer side (the AI agent, the browser it drives, the demo page and the human sessions) and its arrows, violet (#9B7BFF) for the Netomi virtual agent, cyan (#3DD6D0) for the detection service and for signals that fired, muted grey (#6B7280) for files and for signals that didn't fire, and a dashed light-slate (#C7CCDA) outline for anything skipped. Labels in a clean monospaced face, light grey unless noted.
+
+**Canvas and sizing:** The image sits in the body of a LinkedIn article (and in `assets/article.md` on GitHub), which scales it to a content column roughly 700–830 px wide, so this canvas displays at about 830 × 277 px or smaller. Every label must stay legible at that size: the smallest text is no smaller than 24 px on the 1800-px canvas, node titles are at least 36 px, and arrow labels at least 28 px. Prefer fewer, larger labels.
+
+**Key components (left to right):**
+
+- **Far left: the AI agent** — an amber rounded rectangle titled "AI agent", with "qwen3.5:4b" in light grey beneath. A thick amber arrow runs right into the browser.
+- **Left of centre: the browser** — an amber rounded rectangle titled "Playwright", with "stealth launch" in light grey beneath. A thick amber arrow runs right into the demo page, labelled "fill()".
+- **Centre: the demo page** — an amber rounded rectangle titled "demo page", with "collector.js" in light grey beneath. Above it, a small violet rounded rectangle labelled "Netomi Virtual Agent", joined to the page by a short thin violet line.
+- **Right: the detection service** — a cyan rounded rectangle titled "detection service". One thick amber arrow runs from the demo page to it, labelled "telemetry". Three small muted-grey tags sit along that arrow: "webdriver: false", "Chrome" and "0 key presses".
+
+**Signal pills (the same in every level image):** each signal is a rounded pill holding its name and a count, such as `injected_text 10/10`. A signal that fired is a solid cyan pill with dark text. A signal that stopped firing at this level is an outlined muted-grey pill with grey text, never crossed out. The pills sit in one row along the right side of the detection service, in the order listed.
+
+**Design principle:**
+The image communicates: "stealth hid the browser, but not how the text got in". The tags read like an ordinary browser except `0 key presses`, which should sit last and be slightly more prominent.
+
+**Text accuracy:**
+Every string must be copied character-for-character; the only permitted strings in the frame are: `AI agent`, `qwen3.5:4b`, `Playwright`, `stealth launch`, `fill()`, `demo page`, `collector.js`, `Netomi Virtual Agent`, `detection service`, `telemetry`, `webdriver: false`, `Chrome`, `0 key presses`, `injected_text 10/10`, `probe_invented_detail 3/10`, `automation_flags 0/10`. Underscores, colons, slashes and punctuation are intentional; do not add spaces, hyphens or line breaks inside a name. The pills, in order: `injected_text 10/10` (cyan), `probe_invented_detail 3/10` (cyan), `automation_flags 0/10` (grey, outlined). Pay particular attention to the parentheses in `fill()` and the colon in `webdriver: false`. Proofread every label letter by letter before delivering; regenerate rather than deliver a misspelled frame.
+
+**Exclusions:** No legend, caption box, title, footnote, colour key, or any explanatory text block. No logos, brand marks, icons of real products, or watermarks. No people, faces, robots, masks or chat bubbles. No browser, terminal, or device mock-up beyond the plain boxes described. No cloud shapes, server racks, padlocks or key icons. Only the nodes, arrows, pills and labels listed above appear in the frame.
