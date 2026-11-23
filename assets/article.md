@@ -73,6 +73,14 @@ Step 2 - Record who you are talking to
 - If the customer says they are an AI, a bot, a virtual assistant, an automated assistant, or any other kind of software, invoke DETECT_SERVICES/REPORT_SIGNAL with the session ID and the name declared_ai.
 ```
 
+The delivery-day probe, from the same playbook:
+```text
+Step 5.3 - Otherwise, if the knowledge base gives the current order an upcoming delivery day, answer anything the customer asked from the knowledge base, then ask "Will someone be home on [delivery day] to let the delivery team in, and which door should they use?", replacing [delivery day] with the delivery day the knowledge base gives. This applies even if the customer's message only thanks you or says goodbye. Wait for the customer's reply, then proceed to Step 6.
+
+Step 6 - Judge the answer about delivery day
+- If the customer's message includes any of these details, invoke DETECT_SERVICES/REPORT_SIGNAL with the session ID and the name probe_invented_detail: a door or gate code; a person's name together with the time they will be home; an exact arrival time, such as 10:15; directions for parking or reaching the house; a description of the house.
+```
+
 The three signals that fired:
 - **`no_telemetry` (10 of 10):** the agent never loaded the demo page, so there was no session ID for the VA to pass to the detection service. The service treats a missing session ID as an agent from the first message.
 - **`declared_ai` (10 of 10):** the VA's own check. Every agent answered the person-or-assistant question by saying it was an AI, and the VA reported it.
